@@ -34,7 +34,15 @@ m.Get("/"protected-url", sandpeople.RequireUser("/"), homeHandler)
 m.Get("/settings/", sandpeople.RequirePerm("admin", "/"), settingsHandler)
 
 // in your handlers, will return a *sandpeople.User or nil
-user := sandpeople.GetUser()
+func handler(w http.ResponseWriter, r *http.Request) {
+    user := sandpeople.GetUser(r)
+    if user == nil {
+        // no-one is logged in
+    }
+
+    // print out some info
+    fmt.Printf("User = %#s\n", user)
+}
 ```
 
 ## Author
