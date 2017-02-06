@@ -111,10 +111,12 @@ func MockUser(user User) func(http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		fn := func(w http.ResponseWriter, r *http.Request) {
 			fmt.Printf("injecting user\n")
-			r.Header["X-Sandstorm-User-Id"] = []string{"CAFEBABE"}
-			r.Header["X-Sandstorm-Permissions"] = []string{"edit"}
-			r.Header["X-Sandstorm-Username"] = []string{"Andrew Chilton"}
-			r.Header["X-Sandstorm-Preferred-Handle"] = []string{"chilts"}
+			r.Header["X-Sandstorm-User-Id"] = []string{user.ID}
+			r.Header["X-Sandstorm-Permissions"] = []string{strings.Join(user.Permissions, ",")}
+			r.Header["X-Sandstorm-Username"] = []string{user.Name}
+			r.Header["X-Sandstorm-User-Pronouns"] = []string{user.Pronoun}
+			r.Header["X-Sandstorm-Preferred-Handle"] = []string{user.Handle}
+			r.Header["X-Sandstorm-User-Picture"] = []string{user.Avatar}
 
 			next.ServeHTTP(w, r)
 		}
