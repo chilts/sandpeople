@@ -105,3 +105,20 @@ func MakeUser(next http.Handler) http.Handler {
 
 	return http.HandlerFunc(fn)
 }
+
+// MockUser puts `X-Sandstorm-*` headers so that we can fake it outside of a SandStorm environment.
+func MockUser(user User) func(http.Handler) http.Handler {
+	return func(next http.Handler) http.Handler {
+		fn := func(w http.ResponseWriter, r *http.Request) {
+			fmt.Printf("injecting user\n")
+			r.Header["X-Sandstorm-User-Id"] = []string{"CAFEBABE"}
+			r.Header["X-Sandstorm-Permissions"] = []string{"edit"}
+			r.Header["X-Sandstorm-Username"] = []string{"Andrew Chilton"}
+			r.Header["X-Sandstorm-Preferred-Handle"] = []string{"chilts"}
+
+			next.ServeHTTP(w, r)
+		}
+
+		return http.HandlerFunc(fn)
+	}
+}
