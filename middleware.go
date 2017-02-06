@@ -106,7 +106,8 @@ func MakeUser(next http.Handler) http.Handler {
 	return http.HandlerFunc(fn)
 }
 
-// MockUser puts `X-Sandstorm-*` headers so that we can fake it outside of a SandStorm environment.
+// MockUser injects `X-Sandstorm-*` headers into the request so that we can fake a user outside of a SandStorm
+// environment.
 func MockUser(user User) func(http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		fn := func(w http.ResponseWriter, r *http.Request) {
